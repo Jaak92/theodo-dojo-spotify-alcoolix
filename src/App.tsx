@@ -2,7 +2,7 @@ import logo from './assets/logo.svg';
 import './App.css';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { fetchTracks } from './lib/fetchTracks';
+import { fetchTracks } from './lib/fetchTracks'; 
 
 const trackUrls = [
   'https://p.scdn.co/mp3-preview/742294f35af9390e799dd96c633788410a332e52',
@@ -12,16 +12,23 @@ const trackUrls = [
   'https://p.scdn.co/mp3-preview/ac28d1b0be285ed3bfd8e9fa5fad133776d7cf36',
 ];
 
-const { data: tracks } = useQuery({
-  queryKey: ['tracks'],
-  queryFn: fetchTracks
-});
-
 const App = () => {
   const [trackIndex, setTrackIndex] = useState(0)
   const goToNextTrack = () => {
     setTrackIndex(trackIndex + 1);
   }
+  const { data: tracks } = useQuery({
+    queryKey: ['tracks'],
+    queryFn: fetchTracks
+  });
+  const currentTrack = tracks[trackIndex].track;
+  const AlbumCover = ({ track }) =>  {
+    const src = track.album.images[0].url;
+    return (
+        <img src={src} style={{ width: 400, height: 400 }} />
+    );
+  }
+  
   return (
     <div className="App">
       <header className="App-header">
@@ -29,13 +36,16 @@ const App = () => {
         <h1 className="App-title">Bienvenue au BDS</h1>
       </header>
       <div className="App-images">
-        <p>Il va falloir modifier le code pour faire un vrai blind test !</p>
+        <AlbumCover track={currentTrack} />
       </div>
       <div className="App-buttons"></div>
       <audio src={trackUrls[trackIndex]} autoPlay controls />
       <button onClick={goToNextTrack}>
         Next track
       </button>
+      <p>{tracks === undefined ? 'None' : tracks.length}</p>
+      <p>{tracks === undefined ? 'None' : tracks[0].track.name}</p>
+      <p>{tracks === undefined ? 'None' : tracks[0].track.artists[0].name}</p>
     </div>
   );
 };
