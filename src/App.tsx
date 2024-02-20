@@ -21,7 +21,8 @@ const App = () => {
     queryKey: ['tracks'],
     queryFn: fetchTracks
   });
-  const currentTrack = tracks[trackIndex].track;
+  console.log(tracks);
+  const currentTrack = tracks ? tracks[trackIndex]?.track : null;
   const AlbumCover = ({ track }) =>  {
     const src = track.album.images[0].url;
     return (
@@ -36,7 +37,7 @@ const App = () => {
         <h1 className="App-title">Bienvenue au BDS</h1>
       </header>
       <div className="App-images">
-        <AlbumCover track={currentTrack} />
+      <AlbumCover track={currentTrack} />
       </div>
       <div className="App-buttons"></div>
       <audio src={trackUrls[trackIndex]} autoPlay controls />
@@ -44,8 +45,8 @@ const App = () => {
         Next track
       </button>
       <p>{tracks === undefined ? 'None' : tracks.length}</p>
-      <p>{tracks === undefined ? 'None' : tracks[0].track.name}</p>
-      <p>{tracks === undefined ? 'None' : tracks[0].track.artists[0].name}</p>
+      <p>{currentTrack?.name}</p>
+      <p>{currentTrack?.artists[0]?.name}</p>
     </div>
   );
 };
